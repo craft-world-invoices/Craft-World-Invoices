@@ -380,9 +380,7 @@
                         <div class="form-group">
                             <label>Active Brand Profile</label>
                             <div class="template-picker" style="display: flex; flex-direction: column; gap: 8px;">
-                                <button class="tpl-btn active" data-company="ab_motors" style="width: 100%; text-align: left; padding: 10px 14px;"><i class="fa-solid fa-car"></i> AB MOTORS</button>
-                                <button class="tpl-btn" data-company="amg" style="width: 100%; text-align: left; padding: 10px 14px;"><i class="fa-solid fa-gauge-high"></i> AMG</button>
-                                <button class="tpl-btn" data-company="norain_ent" style="width: 100%; text-align: left; padding: 10px 14px;"><i class="fa-solid fa-briefcase"></i> NORAIN ENT</button>
+                                <div id="company-profiles-container" class="template-picker" style="display: flex; flex-direction: column; gap: 10px;">
                             </div>
                         </div>
 
@@ -975,7 +973,56 @@
             closeBtn.addEventListener('click', () => {
                 sidebar.classList.remove('active');
             });
-        }
+        }// 1. Aapka personal aur khufia data
+const defaultData = [
+    { id: "ab_motors", name: "AB MOTORS", icon: "🚗" },
+    { id: "amg", name: "AMG", icon: "⚙️" },
+    { id: "norain_ent", name: "NORAIN ENT", icon: "💼" }
+];
+
+// 2. Browser memory (LocalStorage) se data uthein
+let myProfiles = localStorage.getItem('invoiceProfiles');
+
+if (!myProfiles) {
+    // Agar aap pehli baar khol rahe hain, to yeh data aapki memory mein hamesha ke liye save ho jaye
+    localStorage.setItem('invoiceProfiles', JSON.stringify(defaultData));
+    myProfiles = defaultData;
+} else {
+    myProfiles = JSON.parse(myProfiles);
+}
+
+// 3. Buttons ko screen par render karne ka logic
+const container = document.getElementById('company-profiles-container');
+if (container) {
+    container.innerHTML = ''; // Pehle khali karein
+    
+    myProfiles.forEach((profile, index) => {
+        const btn = document.createElement('button');
+        
+        // Aapki purani button classes automatic lag jayengi
+        btn.className = index === 0 ? 'tpl-btn active' : 'tpl-btn';
+        btn.setAttribute('data-company', profile.id);
+        btn.style.width = "100%"; // Alignment sahi rakhne ke liye
+        btn.innerHTML = `${profile.icon} ${profile.name}`;
+        
+        // Button click hone par profile change karne ka logic
+        btn.addEventListener('click', function() {
+            // Purane chalne wale active classes ko remove karein
+            document.querySelectorAll('.template-picker .tpl-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            // 🔥 Agar aapke purane code mein switch karne ka koi function tha (jaise loadCompanyData), to wo yahan aayega:
+            if (typeof switchCompany === "function") {
+                switchCompany(profile.id);
+            } else if (typeof updateInvoiceTemplate === "function") {
+                updateInvoiceTemplate(profile.id);
+            }
+            console.log("Switched to Profile:", profile.name);
+        });
+        
+        container.appendChild(btn);
+    });
+}
     </script>
 </body>
 </html>
