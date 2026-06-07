@@ -299,11 +299,29 @@
 }
 
 /* 📱 Mobile Screens ke liye khas settings (Media Query) */
+/* 1. Yeh normal styling hai (Isko @media se ooper rakhna hai) */
+.open-btn {
+    display: none; /* Desktop par chhupa rahega */
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    background-color: #2563eb; 
+    color: white;
+    border: none;
+    border-radius: 50px; 
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 9999; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* 2. Ab yahan se aapka purana media query shuru hoga */
 @media (max-width: 768px) {
     .open-btn {
-        display: block; /* Mobile par open menu button nazar ayenge */
+        display: block; /* Mobile par yeh button ab nazar aaye ga */
     }
-    
     .toggle-btn {
         display: block; /* Mobile par close menu button nazar ayenge */
     }
