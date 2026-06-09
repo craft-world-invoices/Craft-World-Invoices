@@ -288,9 +288,6 @@
                 <button id="btn-reset" class="btn btn-danger-outline">
                     <i class="fa-solid fa-rotate-left"></i> Reset
                 </button>
-                <button id="sidebar-toggle-open" class="mobile-menu-btn" style="position: fixed; top: 10px; left: 10px; z-index: 1000; padding: 10px;">
-                    <i class="fa-solid fa-bars"></i>
-                </button>
             </div>
             <div class="sidebar-sections">
                 <div class="sidebar-section">
@@ -370,13 +367,6 @@
                                 <span class="switch-label">Quotation Ref</span>
                             </label>
                         </div>
-                        <div class="toggle-group">
-                             <label class="switch-container">
-                               <input type="checkbox" id="toggle-notes" checked>
-                                <span class="switch-slider"></span>
-                                <span class="switch-label">Terms & Notes</span>
-                            </label>
-                       </div>
                     </div>
                 </div>
 
@@ -521,16 +511,16 @@
 
                 <div class="invoice-summary-grid">
                     
-                    <div class="notes-section" id="notes-container" style="display: flex; flex-direction: column; gap: 15px;">
-                <div>
-                   <div class="section-title" style="display: flex; align-items: center; gap: 6px;">
-                       <button type="button" class="btn-field-toggle no-print" onclick="toggleField('notes')">
-                       <i class="fa-solid fa-eye-slash"></i>
-                       </button>
-                  <span>Terms & Notes</span>
-                </div>
-                      <textarea id="invoice-notes" class="invoice-textarea" rows="2">Payment is due within 14 days.</textarea>
-                  </div>
+                    <div class="notes-section" style="display: flex; flex-direction: column; gap: 15px;">
+                        <div>
+                            <div class="section-title">Terms & Notes</div>
+                            <textarea id="invoice-notes" class="invoice-textarea" rows="2">Payment is due within 14 days.</textarea>
+                        </div>
+                        
+                        <div class="bank-details-block" style="border-top: 1px dashed var(--border-color); padding-top: 12px;">
+                            <div class="section-title" id="details-block-heading" style="color: var(--primary);">Details</div>
+                            <textarea id="invoice-bank" class="invoice-textarea" rows="5" style="font-size: 13px;">Bond Received: $500&#10;Total Payment Received: $1000&#10;Total Invoice: $1000&#10;Paid To Customer: $1000</textarea>
+                        </div>
                     </div>
 
                     <div class="totals-section">
@@ -636,8 +626,6 @@
             const toggleDiscount = document.getElementById('toggle-discount');
             const toggleTax = document.getElementById('toggle-tax');
             const toggleRefQuotation = document.getElementById('toggle-ref-quotation');
-            const toggleNotes = document.getElementById('toggle-notes');
-            const notesContainer = document.getElementById('notes-container');
 
             const rowDueDate = document.getElementById('meta-row-due-date');
             const rowDiscount = document.getElementById('totals-row-discount');
@@ -657,18 +645,12 @@
                 if(this.checked) { rowRefQuotation.classList.remove('force-hidden'); }
                 else { rowRefQuotation.classList.add('force-hidden'); }
             });
-            toggleNotes.addEventListener('change', function() {
-            notesContainer.style.display = this.checked ? 'flex' : 'none';
-            });
 
             window.toggleField = function(fieldType) {
                 if (fieldType === 'dueDate') { toggleDueDate.checked = false; rowDueDate.classList.add('force-hidden'); }
                 else if (fieldType === 'discount') { toggleDiscount.checked = false; rowDiscount.style.display = 'none'; calculateTotals(); }
                 else if (fieldType === 'tax') { toggleTax.checked = false; rowTax.style.display = 'none'; calculateTotals(); }
                 else if (fieldType === 'quotationRef') { toggleRefQuotation.checked = false; rowRefQuotation.classList.add('force-hidden'); }
-                else if (fieldType === 'notes') { 
-                     toggleNotes.checked = false; 
-                     notesContainer.style.display = 'none';}
                 else if (fieldType === 'clientAddress') {
                     const addrRow = document.getElementById('meta-row-client-address');
                     addrRow.style.display = addrRow.style.display === 'none' ? 'block' : 'none';
@@ -694,13 +676,6 @@
             const docTitle = document.getElementById('document-title');
             const docNoLabel = document.getElementById('label-doc-no');
             const docDateLabel = document.getElementById('label-doc-date');
-            const descriptionInput = document.createElement('textarea'); // Input ki jagah textarea
-            descriptionInput.classList.add('description-textarea');
-            descriptionInput.placeholder = "Enter description...";
-            descriptionInput.addEventListener('input', function() {
-            this.style.height = 'auto';
-            this.style.height = (textarea.scrollHeight) + 'px';
-            });
 
             btnInvoice.addEventListener('click', function() {
                 btnInvoice.classList.add('active'); btnQuotation.classList.remove('active');
@@ -785,7 +760,7 @@
                     <td><input type="number" class="invoice-input item-qty" value="${qty}"></td>
                     <td><input type="number" class="invoice-input item-price" value="${price}"></td>
                     <td class="font-semibold item-amount" style="text-align:right; padding-right:15px;">${currentCurrency}0.00</td>
-                    `;
+                `;
                 tr.querySelector('.item-qty').addEventListener('input', calculateTotals);
                 tr.querySelector('.item-price').addEventListener('input', calculateTotals);
                 tr.querySelector('.btn-delete-item').addEventListener('click', function() { tr.remove(); calculateTotals(); });
