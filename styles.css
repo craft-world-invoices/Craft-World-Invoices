@@ -555,4 +555,36 @@ body {
     #meta-row-client-address[style*="display: none"] {
         display: none !important;
     }
+}/* 1. Logo Border Hide */
+#logo-preview-wrapper img { border: none !important; }
+
+/* 2. Item Description Textarea Style */
+.desc-textarea {
+    width: 100%;
+    min-height: 40px;
+    border: none;
+    resize: vertical;
+    font-family: inherit;
+    background: transparent;
 }
+
+/* 6. Mobile Responsiveness (Sidebar & Alignment) */
+@media (max-width: 768px) {
+    .sidebar { display: none; position: fixed; z-index: 1000; width: 250px; }
+    .sidebar.active { display: block; }
+    .invoice-meta-grid { flex-direction: column; gap: 10px; } /* Alignment fix */
+    .container { overflow-x: hidden; width: 100%; padding: 5px; }
+}
+
+/* Sidebar Toggle Button */
+.mobile-menu-btn { display: none; }
+@media (max-width: 768px) { .mobile-menu-btn { display: block; } }
+
+/* Logo uploader border aur outline fix */
+#logo-uploader-zone, 
+#logo-preview-wrapper img {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
